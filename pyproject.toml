@@ -1,0 +1,55 @@
+[tool.poetry]
+name = "customer-email-notifications"
+version = "1.0.0"
+description = "CloudBlue Connect Multi Account Extension that allows to send a personalized email when a new subscription request is created"
+authors = ["CloudBlue LLC"]
+license = "Apache-2.0"
+packages = [
+    { include = "cen" },
+]
+
+[tool.poetry.dependencies]
+python = ">=3.8,<4"
+connect-eaas-core = "26.*"
+boto3 = "^1.24.57"
+Markdown = "^3.4.1"
+peewee = "^3.15.2"
+Jinja2 = "^3.1.2"
+psycopg2-binary = "^2.9.4"
+
+[tool.poetry.dev-dependencies]
+pytest = ">=6.1.2,<8"
+pytest-cov = ">=2.10.1,<5"
+pytest-mock = "^3.3.1"
+coverage = {extras = ["toml"], version = ">=5.3,<7"}
+flake8 = ">=3.8,<6"
+flake8-bugbear = ">=20,<23"
+flake8-cognitive-complexity = "^0.1"
+flake8-commas = "~2.0"
+flake8-future-import = "~0.4"
+flake8-import-order = "~0.18"
+flake8-broken-line = ">=0.3,<0.7"
+flake8-comprehensions = "^3.3.1"
+flake8-debugger = "^4.0.0"
+flake8-eradicate = "^1.0.0"
+flake8-string-format = "^0.3.0"
+pytest-asyncio = "^0.15.1"
+pytest-freezer = "^0.4.6"
+
+
+[tool.poetry.plugins."connect.eaas.ext"]
+"eventsapp" = "cen.events:CENEventsExtension"
+"webapp" = "cen.webapp:CENWebAppExtension"
+
+[tool.pytest.ini_options]
+testpaths = "tests"
+addopts = "--cov=cen --cov-report=term-missing:skip-covered --cov-report=html --cov-report=xml"
+
+[tool.coverage.run]
+relative_files = true
+branch = true
+
+[tool.coverage.report]
+omit = [
+]
+

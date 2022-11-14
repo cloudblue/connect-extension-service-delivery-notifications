@@ -1,0 +1,103 @@
+<html>
+
+<head>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <!-- Google Fonts and Icons -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <!-- MDB -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/5.0.0/mdb.min.css" rel="stylesheet" />
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown.js/0.5.0/markdown.min.js"></script>
+    <script type="module" src="js/index.js"></script>
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="css/style.css">
+    <title>Conditional Email Extension Settings Page</title>
+</head>
+
+<body style="min-height: 600px;">
+    <div class="container" id="settings">
+        <div id="addRule" class="addRule" style="float:right;">
+            <button id="buttonAdd" type="button" class="btn" data-mdb-toggle="modal" data-mdb-target="#addModifyModal" data-mdb-whatever=""><span class="material-icons">add</span>Create Rule</button>
+        </div>
+        <div hidden>
+            <button type="button" data-mdb-toggle="modal" data-mdb-target="#deleteModal"></button>
+        </div>
+        <div id="ruleTable">
+            <table id="ruleListTable" class="main-table">
+                <thead>
+                    <tr>
+                        <th>Rule</th>
+                        <th>Product</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="ruleBody">
+                </tbody>
+            </table>
+        </div>
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Delete Rule</h5>
+                        <input type="hidden" id="rule-id-delete" value="">
+                    </div>
+                    <div class="modal-body"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-danger" data-mdb-dismiss="modal"
+                            id="deleteRule">DELETE</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="addModifyModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel"><label id="header-content"></label></h5>
+                        <input type="hidden" id="rule-id-update" value="">
+                        <input type="hidden" id="product-id-update" value="">
+                    </div>
+                    <div class="modal-body p-0">
+                        <form class="m-0">
+                            <div class="container-fluid md-wrapper">
+                                <div class="row">
+                                    <div class="col-lg-6 col-fields">
+                                        <div id="productDropdown">
+                                            <label class="col-form-label" for="flexCheckDefault">Select product</label>
+                                            <select class="form-select" id="product-id-select" aria-label="Select the product"><option value="PRD-022-646-431">PRD-022-646-431 - Product P03 for martin.constante</option><option value="PRD-681-870-239">PRD-681-870-239 - Product P04 for martin.constante</option></select>
+                                        </div>
+                                        <div id="productIdLabel" style="display: none"></div>
+                                        <div class="form-check">
+                                            <label class="form-check-label" for="flexCheckDefault">Enable</label>
+                                            <input class="form-check-input" type="checkbox" value="" id="enabled">
+                                        </div>
+                                        <label for="message-text" class="col-form-label">Email content</label>
+                                        <textarea class="form-control" id="message-text" rows="28"></textarea>
+                                    </div>
+                                    <div class="col-lg-6 col-preview">
+                                        <label class="col-form-label" for="">Preview</label>
+                                        <div id="previewMD"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" data-mdb-dismiss="modal" id="updateRule"><label id="add-modify-label-button"></label></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/5.0.0/mdb.min.js"></script>
+</body>
+</html>
