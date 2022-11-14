@@ -1,8 +1,7 @@
 # Welcome to the CloudBlue Connect Customer Email Notifications extension!
 
-This extension is used to send an email preconfigured when a new subscription request is created.
-This content of the email can be customized by product. The recicipient is the technical contact of 
-the account. 
+This extension is capable to send an email notification to the buyer of a given subscription when this one is activated. 
+The email can be customized per product to the wishes of the distributor to reflect his branding as well as messaging.
 
 ## License
 

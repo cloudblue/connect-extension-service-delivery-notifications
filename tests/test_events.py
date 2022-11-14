@@ -44,7 +44,7 @@ def test_send_email_notification(
         {
             'DB_CONNECTION_STRING': 'connection_string',
             'AWS_ACCESS_KEY_ID': 'access_id',
-            'AWS_SECRET_ACCESS': 'access_secret',
+            'AWS_SECRET_ACCESS_FOR_SES': 'access_secret',
             'AWS_REGION': 'region',
         },
         installation=installation_data,
@@ -125,7 +125,7 @@ def test_send_email_notification_error_no_template(
         {
             'DB_CONNECTION_STRING': 'connection_string',
             'AWS_ACCESS_KEY_ID': 'access_id',
-            'AWS_SECRET_ACCESS': 'access_secret',
+            'AWS_SECRET_ACCESS_FOR_SES': 'access_secret',
             'AWS_REGION': 'region',
         },
         installation=installation_data,
@@ -164,7 +164,7 @@ def test_send_email_notification_error_template(
         {
             'DB_CONNECTION_STRING': 'connection_string',
             'AWS_ACCESS_KEY_ID': 'access_id',
-            'AWS_SECRET_ACCESS': 'access_secret',
+            'AWS_SECRET_ACCESS_FOR_SES': 'access_secret',
             'AWS_REGION': 'region',
         },
         installation=installation_data,

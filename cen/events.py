@@ -16,7 +16,7 @@ CHARSET = 'UTF-8'
 @variables(
     [
         {
-            'name': 'AWS_SECRET_ACCESS',
+            'name': 'AWS_SECRET_ACCESS_FOR_SES',
             'initial_value': 'Change for the secret',
             'secure': True,
         },
@@ -46,7 +46,7 @@ class CENEventsApplication(EventsApplicationBase):
         ses_client = boto3.client(
             'ses',
             aws_access_key_id=self.config['AWS_ACCESS_KEY_ID'],
-            aws_secret_access_key=self.config['AWS_SECRET_ACCESS'],
+            aws_secret_access_key=self.config['AWS_SECRET_ACCESS_FOR_SES'],
             region_name=self.config['AWS_REGION'],
         )
 

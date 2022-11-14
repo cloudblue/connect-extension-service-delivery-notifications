@@ -33,7 +33,7 @@ db._state = PeeweeConnectionState()
 def initialize(url):
     db.init(**db_url.parse(url))
     db.connect()
-    db.create_tables([EmailTask, Rule])
+    db.create_tables([EmailLog, Rule])
     return db
 
 
@@ -93,7 +93,7 @@ class Rule(BaseDbModel):
         )
 
 
-class EmailTask(BaseDbModel):
+class EmailLog(BaseDbModel):
     PREFIX = 'TSK'
 
     installation_id = peewee.CharField(index=True)
@@ -136,13 +136,9 @@ def create_rule(rule):
 
 def update_rule(rule_id, rule):
     db_rule = get_rule(rule.installation_id, rule_id)
-    print(f'===Rule ID {rule_id}====')
-    print(f'===Rule Enabled {rule.enabled}====')
-
     db_rule.message = rule.message
     db_rule.enabled = rule.enabled
-    result = db_rule.save()
-    print(f'===Result {result}====')
+    db_rule.save()
     return db_rule
 
 
@@ -154,36 +150,36 @@ def delete_rule(installation_id, rule_id):
 
 
 def create_email_task(email_task):
-    dbemailtask = EmailTask(**email_task)
-    dbemailtask.save()
-    return dbemailtask
+    dbEmailLog = EmailLog(**email_task)
+    dbEmailLog.save()
+    return dbEmailLog
 
 
 def get_email_tasks(installation_id, search, limit, offset):
-    result = EmailTask.select(
-        EmailTask.id,
-        EmailTask.product_id,
-        EmailTask.product_name,
-        EmailTask.product_logo,
-        EmailTask.email_to,
-        EmailTask.date,
+    result = EmailLog.select(
+        EmailLog.id,
+        EmailLog.product_id,
+        EmailLog.product_name,
+        EmailLog.product_logo,
+        EmailLog.email_to,
+        EmailLog.date,
     ).where(
-        EmailTask.installation_id == installation_id,
-        (EmailTask.product_id.contains(search)
-            | EmailTask.email_to.contains(search)),
+        EmailLog.installation_id == installation_id,
+        (EmailLog.product_id.contains(search)
+            | EmailLog.email_to.contains(search)),
 
     ).limit(limit).offset(offset)
-    count = EmailTask.select().where(
-        EmailTask.installation_id == installation_id,
-        (EmailTask.product_id.contains(search)
-            | EmailTask.email_to.contains(search)),
+    count = EmailLog.select().where(
+        EmailLog.installation_id == installation_id,
+        (EmailLog.product_id.contains(search)
+            | EmailLog.email_to.contains(search)),
     ).count()
     return count, result
 
 
 def get_email_task(installation_id, task_id):
-    result = EmailTask.get(
-        (EmailTask.id == task_id)
-        & (EmailTask.installation_id == installation_id),
+    result = EmailLog.get(
+        (EmailLog.id == task_id)
+        & (EmailLog.installation_id == installation_id),
     )
     return result

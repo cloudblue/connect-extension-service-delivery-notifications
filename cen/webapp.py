@@ -10,7 +10,7 @@ from connect.eaas.core.inject.synchronous import get_installation, get_installat
 from connect.eaas.core.inject.common import get_call_context, get_config
 from connect.eaas.core.inject.models import Context
 
-from cen.models import EmailTask, EmailTaskPage, Error, Product, Rule, Settings
+from cen.models import EmailLog, EmailLogPage, Error, Product, Rule, Settings
 from cen import database, jinja
 
 
@@ -152,7 +152,7 @@ class CENWebApplication(WebApplicationBase):
 
     @router.get(
         '/email_tasks',
-        response_model=EmailTaskPage,
+        response_model=EmailLogPage,
     )
     def retrieve_email_tasks(
         self,
@@ -168,11 +168,11 @@ class CENWebApplication(WebApplicationBase):
             limit,
             offset,
         )
-        return EmailTaskPage(count=count, results=list(results))
+        return EmailLogPage(count=count, results=list(results))
 
     @router.get(
         '/email_task/{task_id}',
-        response_model=EmailTask,
+        response_model=EmailLog,
     )
     def retrieve_email_task(
         self,

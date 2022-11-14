@@ -5,7 +5,7 @@ import pytest
 from connect.client import R
 
 from cen import database
-from cen.models import EmailTaskPage
+from cen.models import EmailLogPage
 from cen.webapp import CENWebApplication
 
 
@@ -50,7 +50,7 @@ def test_retrieve_email_tasks(mocker, auto_rollback, test_client_factory):
     )
     assert response.status_code == 200
     data = response.json()
-    assert EmailTaskPage(**data).dict() == EmailTaskPage(count=1, results=[expected_task]).dict()
+    assert EmailLogPage(**data).dict() == EmailLogPage(count=1, results=[expected_task]).dict()
 
 
 def test_retrieve_settings(test_client_factory, client_mocker_factory):

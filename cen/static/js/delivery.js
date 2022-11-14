@@ -3,7 +3,7 @@ const app = createApp({});
 
 app.listen('$init', main);
 
-async function getEmailTasksList(limit, offset, search) {
+async function getEmailLogsList(limit, offset, search) {
     const response = await fetch(`/api/email_tasks?search=${search}&limit=${limit}&offset=${offset}`);
     let body = await response.json();
     console.log(body);
@@ -14,7 +14,7 @@ async function main() {
 
     let offset = 0;
     let search = '';
-    document.getElementById("emailTasksTable").style.display = 'inline';
+    document.getElementById("EmailLogsTable").style.display = 'inline';
     var t = $('#task-list-table').DataTable({
         'paging': false,
         'searching': false,
@@ -27,7 +27,7 @@ async function main() {
         'ajax': async function (data, callback, settings) {
 
             const limit = $('#select-rows-per-page').val();
-            let res = await getEmailTasksList(limit, offset, $('#search-input').val());
+            let res = await getEmailLogsList(limit, offset, $('#search-input').val());
             let count = res.count;
             res = { 'data': res.results };
             if (offset <= 1) {

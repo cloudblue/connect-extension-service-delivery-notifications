@@ -33,7 +33,7 @@ class Rule(BaseModel):
         getter_dict = PeeweeGetterDict
 
 
-class EmailTask(BaseModel):
+class EmailLog(BaseModel):
     id: Optional[str]
     installation_id: Optional[str]
     date: datetime
@@ -56,9 +56,9 @@ class EmailTask(BaseModel):
         getter_dict = PeeweeGetterDict
 
 
-class EmailTaskPage(BaseModel):
+class EmailLogPage(BaseModel):
     count: int
-    results: List[EmailTask]
+    results: List[EmailLog]
 
 
 class Product(BaseModel, extra=Extra.ignore):
