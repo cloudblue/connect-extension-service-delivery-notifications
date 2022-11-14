@@ -35,7 +35,7 @@ CHARSET = 'UTF-8'
         },
     ],
 )
-class EmailNotificationsApplication(EventsApplicationBase):
+class EmailNotificationsEventsApplication(EventsApplicationBase):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
