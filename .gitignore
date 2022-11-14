@@ -132,3 +132,6 @@ dmypy.json
 .pyre/
 notas_martin.txt
 pg_data
+
+# node_modules
+node_modules/
