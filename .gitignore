@@ -50,7 +50,10 @@ coverage.xml
 *.py,cover
 .hypothesis/
 .pytest_cache/
-
+.devcontainer/
+test_email_boto3.py
+get_email_statistics.py
+.DS_Store
 # Translations
 *.mo
 *.pot
@@ -127,3 +130,5 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+notas_martin.txt
+pg_data

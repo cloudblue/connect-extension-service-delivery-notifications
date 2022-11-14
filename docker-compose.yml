@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  cen_dev:
+    container_name: cen_dev
+    image: cloudblueconnect/connect-extension-runner:26.36
+    command: cextrun -d
+    volumes: 
+      - .:/extension
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgres://postgres:A12345@db:5432/cen
+      TEST_DATABASE_URL: postgres://postgres:mypass@db_ram:5432/cen
+    depends_on:
+      - db
+      - db_ram
+  db:
+    image: postgres:11.5
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./pg_data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_PASSWORD: A12345
+      POSTGRES_DB: cen
+  db_ram:
+    image: postgres:11.5
+    tmpfs:
+      - /var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: mypass
+      POSTGRES_DB: cen
