@@ -1,12 +1,12 @@
 from connect.eaas.core.enums import ResultType
 
 from cen import database
-from cen.events import CENEventsExtension
+from cen.events import CENEventsApplication
 
 
 def test_constructor(mocker, connect_client, logger):
     mocked_initialize = mocker.patch('cen.events.database.initialize')
-    CENEventsExtension(
+    CENEventsApplication(
         connect_client,
         logger,
         {'DB_CONNECTION_STRING': 'connection_string'},
@@ -38,7 +38,7 @@ def test_send_email_notification(
     mocked_boto3 = mocker.patch('cen.events.boto3.client', return_value=mocked_ses_client)
     mocked_jinja = mocker.patch('cen.events.jinja.render', return_value='rendered body')
 
-    app = CENEventsExtension(
+    app = CENEventsApplication(
         connect_client,
         logger,
         {
@@ -119,7 +119,7 @@ def test_send_email_notification_error_no_template(
         }},
     )
 
-    app = CENEventsExtension(
+    app = CENEventsApplication(
         connect_client,
         logger,
         {
@@ -158,7 +158,7 @@ def test_send_email_notification_error_template(
     mocked_ses_client = mocker.MagicMock()
     mocker.patch('cen.events.boto3.client', return_value=mocked_ses_client)
 
-    app = CENEventsExtension(
+    app = CENEventsApplication(
         connect_client,
         logger,
         {

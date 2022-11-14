@@ -2,7 +2,8 @@
     "name": "Customer Email Notifications",
     "description": "Whit this extension you can send an email every time that a purchase request is approved.",
     "version": "1.0.0",
-    "readme_url": "https://github.com/cloudblue/eaas-e2e-ma-mock/blob/master/README.md",
-    "changelog_url": "https://github.com/cloudblue/eaas-e2e-ma-mock/blob/master/CHANGELOG.md",
+    "readme_url": "https://github.com/cloudblue/connect-extension-service-delivery-notifications/master/README.md",
+    "changelog_url": "https://github.com/cloudblue/connect-extension-service-delivery-notifications/master/CHANGELOG.md",
     "audience": ["distributor", "reseller"]
   }
+  

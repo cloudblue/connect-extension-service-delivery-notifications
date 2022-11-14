@@ -38,7 +38,7 @@ def get_db(db_state=Depends(reset_db_state), config=Depends(get_config)):
         },
     ],
 )
-class CENWebAppExtension(WebApplicationBase):
+class CENWebApplication(WebApplicationBase):
 
     @router.get(
         '/rules',
