@@ -39,7 +39,7 @@ pytest-freezer = "^0.4.6"
 
 [tool.poetry.plugins."connect.eaas.ext"]
 "eventsapp" = "cen.events:EmailNotificationsApplication"
-"webapp" = "cen.webapp:CENWebApplication"
+"webapp" = "cen.webapp:EmailNotificationsWebApplication"
 
 [tool.pytest.ini_options]
 testpaths = "tests"

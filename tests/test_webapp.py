@@ -6,12 +6,12 @@ from connect.client import R
 
 from cen import database
 from cen.models import EmailLogPage
-from cen.webapp import CENWebApplication
+from cen.webapp import EmailNotificationsWebApplication
 
 
 def test_retrieve_email_tasks_not_found(mocker, auto_rollback, test_client_factory):
 
-    client = test_client_factory(CENWebApplication)
+    client = test_client_factory(EmailNotificationsWebApplication)
     response = client.get(
         '/api/email_task/RUL-000',
         config={'DB_CONNECTION_STRING': os.getenv('TEST_DATABASE_URL')},
@@ -43,7 +43,7 @@ def test_retrieve_email_tasks(mocker, auto_rollback, test_client_factory):
         'date': datetime.utcnow().isoformat(),
         'email_to': 'email_to',
     }
-    client = test_client_factory(CENWebApplication)
+    client = test_client_factory(EmailNotificationsWebApplication)
     response = client.get(
         '/api/email_tasks',
         config={'DB_CONNECTION_STRING': os.getenv('TEST_DATABASE_URL')},
@@ -64,7 +64,7 @@ def test_retrieve_settings(test_client_factory, client_mocker_factory):
             'email': 'test@example.org',
         },
     }
-    client = test_client_factory(CENWebApplication)
+    client = test_client_factory(EmailNotificationsWebApplication)
     client_mocker = client_mocker_factory()
     client_mocker.accounts['PA-000-111'].get(return_value={'brand': 'BR-012'})
     client_mocker.branding('brand').get(return_value=brand_data)
@@ -92,7 +92,7 @@ def test_list_rules(mocker, auto_rollback, test_client_factory):
         'message': 'message',
         'enabled': True,
     }
-    client = test_client_factory(CENWebApplication)
+    client = test_client_factory(EmailNotificationsWebApplication)
     response = client.get(
         '/api/rules',
         config={'DB_CONNECTION_STRING': os.getenv('TEST_DATABASE_URL')},
@@ -123,7 +123,7 @@ def test_get_rule(mocker, auto_rollback, test_client_factory):
         'enabled': True,
     }
     url = f'/api/rules/{obj.id}'
-    client = test_client_factory(CENWebApplication)
+    client = test_client_factory(EmailNotificationsWebApplication)
     response = client.get(
         url,
         config={'DB_CONNECTION_STRING': os.getenv('TEST_DATABASE_URL')},
@@ -136,7 +136,7 @@ def test_get_rule(mocker, auto_rollback, test_client_factory):
 def test_get_rule_no_exit(mocker, auto_rollback, test_client_factory):
 
     url = '/api/rules/RUL-000'
-    client = test_client_factory(CENWebApplication)
+    client = test_client_factory(EmailNotificationsWebApplication)
     response = client.get(
         url,
         config={'DB_CONNECTION_STRING': os.getenv('TEST_DATABASE_URL')},
@@ -153,7 +153,7 @@ def test_create_rule(mocker, auto_rollback, test_client_factory):
         'message': 'message',
         'enabled': True,
     }
-    client = test_client_factory(CENWebApplication)
+    client = test_client_factory(EmailNotificationsWebApplication)
     response = client.post(
         '/api/rules',
         json=rule,
@@ -178,7 +178,7 @@ def test_create_rule_bad_template(mocker, auto_rollback, test_client_factory):
         'message': '{{% for item in',
         'enabled': True,
     }
-    client = test_client_factory(CENWebApplication)
+    client = test_client_factory(EmailNotificationsWebApplication)
     response = client.post(
         '/api/rules',
         json=rule,
@@ -199,7 +199,7 @@ def test_create_rule_product_duplicated(mocker, auto_rollback, test_client_facto
         'enabled': True,
     }
     database.create_rule(rule)
-    client = test_client_factory(CENWebApplication)
+    client = test_client_factory(EmailNotificationsWebApplication)
     response = client.post(
         '/api/rules',
         json=rule,
@@ -224,7 +224,7 @@ def test_delete_rule(mocker, auto_rollback, test_client_factory):
     }
     obj = database.create_rule(rule)
     url = f'/api/rules/{obj.id}'
-    client = test_client_factory(CENWebApplication)
+    client = test_client_factory(EmailNotificationsWebApplication)
     response = client.delete(
         url,
         config={'DB_CONNECTION_STRING': os.getenv('TEST_DATABASE_URL')},
@@ -233,7 +233,7 @@ def test_delete_rule(mocker, auto_rollback, test_client_factory):
 
 
 def test_delete_rule_no_exist(mocker, auto_rollback, test_client_factory):
-    client = test_client_factory(CENWebApplication)
+    client = test_client_factory(EmailNotificationsWebApplication)
     response = client.delete(
         '/api/rules/RUL-0000',
         config={'DB_CONNECTION_STRING': os.getenv('TEST_DATABASE_URL')},
@@ -261,7 +261,7 @@ def test_update_rule(mocker, auto_rollback, test_client_factory):
     }
     obj = database.create_rule(rule)
     url = f'/api/rules/{obj.id}'
-    client = test_client_factory(CENWebApplication)
+    client = test_client_factory(EmailNotificationsWebApplication)
     response = client.put(
         url,
         json=new_rule,
@@ -284,7 +284,7 @@ def test_update_rule_no_exist(mocker, auto_rollback, test_client_factory):
         'message': 'message2',
         'enabled': False,
     }
-    client = test_client_factory(CENWebApplication)
+    client = test_client_factory(EmailNotificationsWebApplication)
     response = client.put(
         '/api/rules/RUL-0000',
         json=new_rule,
@@ -320,7 +320,7 @@ def test_retrieve_products(test_client_factory, client_mocker_factory, auto_roll
     }
     database.create_rule(rule)
 
-    client = test_client_factory(CENWebApplication)
+    client = test_client_factory(EmailNotificationsWebApplication)
     response = client.get(
         '/api/products',
         config={'DB_CONNECTION_STRING': os.getenv('TEST_DATABASE_URL')},
@@ -348,7 +348,7 @@ def test_get_product(test_client_factory, client_mocker_factory, auto_rollback):
     client_mocker = client_mocker_factory()
     client_mocker.collection('products')[product_id].get(return_value=product)
 
-    client = test_client_factory(CENWebApplication)
+    client = test_client_factory(EmailNotificationsWebApplication)
     response = client.get(
         '/api/products/PRD-000',
         config={'DB_CONNECTION_STRING': os.getenv('TEST_DATABASE_URL')},
@@ -363,7 +363,7 @@ def test_get_product_not_found(test_client_factory, client_mocker_factory, auto_
     client_mocker = client_mocker_factory()
     client_mocker.collection('products')[product_id].get(status_code=404)
 
-    client = test_client_factory(CENWebApplication)
+    client = test_client_factory(EmailNotificationsWebApplication)
     response = client.get(
         '/api/products/PRD-000',
         config={'DB_CONNECTION_STRING': os.getenv('TEST_DATABASE_URL')},
