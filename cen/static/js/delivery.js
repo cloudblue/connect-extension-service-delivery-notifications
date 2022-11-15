@@ -3,10 +3,9 @@ const app = createApp({});
 
 app.listen('$init', main);
 
-async function getEmailLogsList(limit, offset, search) {
+export async function getEmailLogsList(limit, offset, search) {
     const response = await fetch(`/api/email_tasks?search=${search}&limit=${limit}&offset=${offset}`);
     let body = await response.json();
-    console.log(body);
     return body;
 }
 

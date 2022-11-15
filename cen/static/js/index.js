@@ -6,7 +6,7 @@ $(window).on('load', async () => {
     await refresh();
 });
 
-async function getRules() {
+export async function getRules() {
     const response = await fetch('/api/rules');
     const body = await response.json();
     return body;
