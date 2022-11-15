@@ -51,7 +51,7 @@ async function main() {
             { 'data': 'id' },
             {
                 'data': 'product_logo', render: function (data, type, row, meta) {
-                    return `<div class="td-product"><img src="${data}" alt="Logo"><div>
+                    return `<div class="td-product"><img src="${data}" alt="Logo" height="22"><div>
                         <div class="name">${row['product_name']}</div>
                         <div class="id">${row['product_id']}</div>
                     </div></div>`
@@ -120,7 +120,7 @@ async function main() {
         const container = document.getElementById('container');
 
         if (modalBody.offsetHeight >= container.offsetHeight) {
-            const height = modalBody.offsetHeight + 100;
+            const height = modalBody.offsetHeight + 150;
             app.emit('$size', { height });
         }
     });
