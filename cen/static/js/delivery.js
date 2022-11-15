@@ -1,7 +1,5 @@
-import createApp from '/static/js/toolkit.js';
-const app = createApp({});
+import createApp from '/static/js/libs/toolkit.js';
 
-app.listen('$init', main);
 
 export async function getEmailLogsList(limit, offset, search) {
     const response = await fetch(`/api/email_tasks?search=${search}&limit=${limit}&offset=${offset}`);
@@ -10,9 +8,7 @@ export async function getEmailLogsList(limit, offset, search) {
 }
 
 async function main() {
-
     let offset = 0;
-    let search = '';
     document.getElementById("EmailLogsTable").style.display = 'inline';
     var t = $('#task-list-table').DataTable({
         'paging': false,
@@ -115,22 +111,14 @@ async function main() {
         $('#asset-id').html(body['asset_id']);
         $('#request-id').html(body['request_id']);
         $('#email-content').html(body['body']);
-
-        const modalBody = mailDetailModal.getElementsByClassName('modal-dialog')[0];
-        const container = document.getElementById('container');
-
-        if (modalBody.offsetHeight >= container.offsetHeight) {
-            const height = modalBody.offsetHeight + 100;
-            app.emit('$size', { height });
-        }
     });
 
     mailDetailModal.addEventListener('hide.mdb.modal', async (e) => {
         const container = document.getElementById('container');
         const height = container.offsetHeight;
-        app.emit('$size', { height });
         t.destroy();
         main();
     });
-    app.emit('$size', { height: 800 });
 }
+
+createApp({}).then(main);

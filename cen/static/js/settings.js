@@ -1,5 +1,5 @@
-import createApp from '/static/js/toolkit.js';
-const app = createApp({});
+import createApp from '/static/js/libs/toolkit.js';
+
 
 const settingsPage ={
     async getSettings() {
@@ -17,4 +17,4 @@ const settingsPage ={
 
 export default settingsPage;
 
-settingsPage.main();
+createApp({}).then(function() {settingsPage.main();});

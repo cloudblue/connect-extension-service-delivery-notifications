@@ -4,7 +4,9 @@ module.exports = {
   moduleNameMapper: {
     '^/static(.*)$': '<rootDir>/cen/static$1',
   },
+  collectCoverage: true,
   testEnvironment: 'jsdom',
+  coveragePathIgnorePatterns: ['/libs'],
   transform: {
     '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest',
   },

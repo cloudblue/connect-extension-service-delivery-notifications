@@ -1,9 +1,11 @@
-import createApp from '/static/js/toolkit.js';
+import createApp from '/static/js/libs/toolkit.js';
 
-$(window).on('load', async () => {
-    console.log('load event fired');
-    setupEvents();
-    await refresh();
+$(window).on('load', () => {    
+    createApp({}).then(async() => {
+        console.log('load event fired');
+        setupEvents();
+        await refresh();
+    });
 });
 
 export async function getRules() {
@@ -205,9 +207,3 @@ function updateMD() {
     preview = markdown.toHTML(preview);
     $('#previewMD').html(preview);
 }
-
-
-const app = createApp({});
-app.listen('$init', async () => {
-    app.emit('$size', { height: 800 });
-});
