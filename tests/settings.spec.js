@@ -1,9 +1,4 @@
 import settingsPage from '../cen/static/js/settings.js';
-import createApp from '../cen/static/js/toolkit.js';
-
-
-jest.mock('../cen/static/js/toolkit.js');
-createApp.mockReturnValue({});
 
 global.fetch.mockReturnValue(Promise.resolve({
     json: () => Promise.resolve({email_sender: 'test@example.email', name: 'Test'}),
