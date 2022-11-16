@@ -204,10 +204,20 @@ function updateMD() {
     let preview = $('#message-text').val();
     preview = markdown.toHTML(preview);
     $('#previewMD').html(preview);
+    const modalBody = mailDetailModal.getElementsByClassName('modal-dialog')[0];
+    const container = document.getElementById('container');
+
+    if (modalBody.offsetHeight >= container.offsetHeight) {
+        const height = modalBody.offsetHeight + 150;
+        app.emit('$size', { height });
+    }
+
+
+
 }
 
 
 const app = createApp({});
 app.listen('$init', async () => {
-    app.emit('$size', { height: 800 });
+    app.emit('$size', { height: 1000 });
 });
