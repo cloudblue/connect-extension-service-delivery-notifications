@@ -1,9 +1,9 @@
 {
-    "name": "Customer Email Notifications",
-    "description": "Whit this extension you can send an email every time that a purchase request is approved.",
+    "name": "End Customer Email Notifications",
+    "description": "With this extension you can send an email every time that a purchase request is approved.",
     "version": "1.0.0",
     "readme_url": "https://github.com/cloudblue/connect-extension-service-delivery-notifications/master/README.md",
     "changelog_url": "https://github.com/cloudblue/connect-extension-service-delivery-notifications/master/CHANGELOG.md",
-    "audience": ["distributor", "reseller"]
-  }
-  
+    "audience": ["distributor", "reseller"],
+    "icon": "email"
+}
