@@ -31,7 +31,7 @@ db._state = PeeweeConnectionState()
 
 
 def initialize(url):
-    db.init(**db_url.parse(url))
+    db.init(**db_url.parse(url, unquote_password=True))
     db.connect()
     db.create_tables([EmailLog, Rule])
     return db
