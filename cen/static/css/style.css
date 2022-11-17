@@ -153,12 +153,35 @@ table {
     box-shadow: none;
 }
 
+#buttonSeeConf {
+    position: relative;
+    background: none;
+    border: none;
+    color: rgb(97, 97, 97);
+    font-size: 20px;
+    z-index: 1;
+    height: 36px;
+    width: 36px;
+    padding: 0;
+    box-shadow: none;
+    margin-top: 6px;
+    margin-left: 10px;
+}
+
 .main-table tbody td button:hover {
     color: rgb(97, 97, 97);
     border-radius: 50%;
     background-color: #e5e5e5;
     box-shadow: none;
 }
+
+#buttonSeeConf:hover {
+    color: rgb(97, 97, 97);
+    border-radius: 2px;
+    background-color: #e5e5e5;
+    box-shadow: none;
+}
+
 
 .td-product {
     display: flex;

@@ -1,223 +1,133 @@
 import createApp from '/static/js/toolkit.js';
-
-$(window).on('load', async () => {
-    console.log('load event fired');
-    setupEvents();
-    await refresh();
-});
-
-export async function getRules() {
-    const response = await fetch('/api/rules');
-    const body = await response.json();
-    return body;
-}
-
-async function getRule(id) {
-    const response = await fetch(`/api/rules/${id}`);
-    const body = await response.json();
-    return body;
-}
-
-async function getRulesProducts() {
-    const response = await fetch('/api/products');
-    const body = await response.json();
-    return body;
-}
-
-async function deleteRule() {
-    const id = $('#rule-id-delete').val();
-    console.log(`delelte rule ${id}`);
-    await fetch(`/api/rules/${id}`, { method: 'DELETE', });
-    refresh();
-}
-
-async function createUpdateRule() {
-    const ruleId = $('#rule-id-update').val();
-    const enabled = $('#enabled').is(':checked');
-    const productId = ruleId ? $('#product-id-update').val() : $("#product-id-select option:selected").val();
-    
-    const responseProd = await fetch(`/api/products/${productId}`);
-    const product = await responseProd.json(); 
-    let icon;
-    console.log(product);
-    if (product['logo']!= null){
-        console.log("Tiene logo");
-        icon = product['icon'];
-    } else {
-        console.log("NO Tiene logo");
-        icon = './images/product.svg';
-    }
-    console.log(icon);
-    const payload = JSON.stringify({
-        "product_id": productId,
-        "product_name": product['name'],
-        "product_logo": icon,
-        "enabled": enabled,
-        "message": $('#message-text').val()
-    });
-
-    let url = null;
-    let method = null;
-    
-    if (ruleId) {
-        url = `/api/rules/${ruleId}`;
-        method = 'PUT'
-    } else {
-        url = `/api/rules`;
-        method = 'POST'
-    }
-    try {
-        await fetch(
-            url,
-            {
-                method: method,
-                headers: { 'Content-Type': 'application/json' },
-                body: payload
-            }
-        );
-        $('#rule-id-update').val('');    
-        refresh();
-    } catch (e){alert(e)} 
-}
-
-async function refreshRules() {
-    console.log('refresh rules invoked');
-    $('#ruleBody').empty();
-    const rules = await getRules();
-    if (rules.length == 0) {
-        $('#ruleBody').append(
-            '<tr><td colspan="4" style="text-align: center"><strong>No rules found</strong></td></tr>'
-        );
-        return;
-    }
-    rules.forEach(rule => {
-        const row = $('<tr>');
-        row.append(`<td>${rule.id}</td>`);
-        row.append(`<td class="td-product">
-        <img src="./images/product.svg" alt="Logo">
-        <div>
-        <div class="name">${rule.product_name}</div>
-        <div class="id">${rule.product_id}</div>
-        </div></td>`);
-        if (rule.enabled) {
-            row.append('<td><span class="enabled"></span>Enabled</td>');
-        } else {
-            row.append('<td><span class="disabled"></span>Disabled</td>');
-        }
-        
-        row.append(`
-            <td>
-                <button
-                    type="button"
-                    class="material-icons btn-secondary"
-                    data-mdb-toggle="modal"
-                    data-mdb-target="#addModifyModal"
-                    data-mdb-whatever="${rule.id}">
-                    edit
-                </button>
-                <button
-                    type="button"
-                    class="material-icons btn-danger"
-                    data-mdb-toggle="modal"
-                    data-mdb-target="#deleteModal"
-                    data-mdb-whatever="${rule.id}">
-                    delete
-                </button>
-            </td>  
-        `);
-        console.log(row);
-        $('#ruleBody').append(row);
-    });
-}
-
-async function populateProductsDropdown() {
-    $('#product-id-select').empty();
-    const products = await getRulesProducts();
-    console.log(products);
-    products.forEach(product => {
-        if (!product.used) {
-            $('#product-id-select').append(
-                `<option value="${product.id}">${product.name}</option>`
-            );
-        }
-    });
-}
-
-async function showDeleteDialog(e) {
-    const button = $(e.relatedTarget);
-    const ruleId = button.attr('data-mdb-whatever');
-    const rule = await getRule(ruleId);
-    console.log(`in show delete dialog ${ruleId}`);
-    $('#deleteModal .modal-body').html(`Are you sure delete the rule associated <br> to the product: ${rule['product_name']}?`);
-    $('#rule-id-delete').val(ruleId);
-}
-
-async function showAddModifyDialog(e) {
-    $('#add-modify-modal-content').hide();
-    const button = $(e.relatedTarget);
-    const ruleId = button.attr('data-mdb-whatever');
-    if (!ruleId) {
-        await populateProductsDropdown();
-        $('#productDropdown').show();
-        $('#header-content').text('Create Rule');
-        $('#add-modify-label-button').text('ADD');
-        $('#message-text').load('example.md', updateMD);
-        $('#productIdLabel').text('');
-        $('#productIdLabel').hide();
-    } else {
-        const rule = await getRule(ruleId);
-        $('#productDropdown').hide();
-        const textTittle = `Modify Rule for: ${rule['product_name']}`; 
-        $('#header-content').text(textTittle);
-        $('#add-modify-label-button').text('SAVE');
-        $('#enabled').prop('checked', rule['enabled'] == true);
-        $('#rule-id-update').val(ruleId);
-        $('#product-id-update').val(rule['product_id']);
-        $('#message-text').val(rule['message']);
-        updateMD();
-    }
-    $('#add-modify-modal-content').show();
-}
-
-async function refresh() {
-    const products = await getRulesProducts();
-    let productsAvailable = false;
-    products.forEach(product => {
-        if (!product.used) {
-            productsAvailable = true;
-        }
-    });
-
-    $('#buttonAdd').prop('disabled', !productsAvailable);
-    await refreshRules();
-}
-
-function setupEvents() {
-    $('#deleteModal').on('show.mdb.modal', showDeleteDialog);
-    $('#addModifyModal').on('show.mdb.modal', showAddModifyDialog);
-    $('#updateRule').click(createUpdateRule);
-    $('#deleteRule').click(deleteRule);
-    $('#message-text').on('input', updateMD);
-}
-
-function updateMD() {
-    let preview = $('#message-text').val();
-    preview = markdown.toHTML(preview);
-    $('#previewMD').html(preview);
-    const modalBody = mailDetailModal.getElementsByClassName('modal-dialog')[0];
-    const container = document.getElementById('container');
-
-    if (modalBody.offsetHeight >= container.offsetHeight) {
-        const height = modalBody.offsetHeight + 150;
-        app.emit('$size', { height });
-    }
-
-
-
-}
-
-
 const app = createApp({});
-app.listen('$init', async () => {
-    app.emit('$size', { height: 1000 });
-});
+
+app.listen('$init', main);
+
+export async function getEmailLogsList(limit, offset, search) {
+    const response = await fetch(`/api/email_tasks?search=${search}&limit=${limit}&offset=${offset}`);
+    let body = await response.json();
+    return body;
+}
+
+async function main() {
+
+    let offset = 0;
+    let search = '';
+    document.getElementById("EmailLogsTable").style.display = 'inline';
+    var t = $('#task-list-table').DataTable({
+        'paging': false,
+        'searching': false,
+        'info': false,
+        'serverSide': true,
+        'processing': true,
+        'buttons': [
+            'searchPanes'
+        ],
+        'ajax': async function (data, callback, settings) {
+
+            const limit = $('#select-rows-per-page').val();
+            let res = await getEmailLogsList(limit, offset, $('#search-input').val());
+            let count = res.count;
+            res = { 'data': res.results };
+            if (offset <= 1) {
+                $('#page-down').addClass('disabled');
+            } else {
+                $('#page-down').removeClass('disabled');
+            }
+            let pageMax = parseFloat(offset) + parseFloat(limit) - 1;
+            if (pageMax >= count) {
+                $('#page-up').addClass('disabled');
+                pageMax = count;
+            } else {
+                $('#page-up').removeClass('disabled');
+            }
+
+            $('#page-total').html(count);
+            $('#page-min').html(parseFloat(offset)+1);
+            $('#page-max').html(pageMax);
+            callback(res);
+        },
+        'columns': [
+            { 'data': 'id' },
+            {
+                'data': 'product_logo', render: function (data, type, row, meta) {
+                    return `<div class="td-product"><img src="${data}" alt="Logo" height="22"><div>
+                        <div class="name">${row['product_name']}</div>
+                        <div class="id">${row['product_id']}</div>
+                    </div></div>`
+                }
+            },
+            { 'data': 'email_to' },
+            {
+                'data': 'date', render: function (data, type, row, meta) {
+                    return moment.utc(data).format('MMMM Do YYYY, h:mm:ss a');
+                }
+            },
+            {
+                'data': 'date', render: function (data, type, row, meta) {
+                    return `<button type="button" class="material-icons" data-mdb-toggle="modal" data-mdb-target="#mailDetailModal"
+            data-mdb-whatever="${row['id']}">visibility</button>`;
+                }
+            },
+        ],
+    });
+
+    $('#search-input').keyup(function () {
+        if ($(this).val().length==0 || $(this).val().length>3) {
+            t.ajax.reload();
+        }
+
+    });
+
+    $('#select-rows-per-page').change(function () {
+        t.ajax.reload();
+    });
+
+    $('#page-down').click(function () {
+        const limit = $('#select-rows-per-page').val();
+        offset = (parseFloat(offset) - parseFloat(limit));
+        if (offset < 0) offset = 0;
+        t.ajax.reload();
+    });
+
+    $('#page-up').click(function () {
+        const limit = $('#select-rows-per-page').val();
+        offset = parseFloat(offset) + parseFloat(limit);
+        t.ajax.reload();
+    });
+
+    const mailDetailModal = document.getElementById('mailDetailModal');
+    mailDetailModal.addEventListener('show.mdb.modal', async (e) => {
+        const button = e.relatedTarget;
+        const recipient = button.getAttribute('data-mdb-whatever');
+        const response = await fetch(`/api/email_task/${recipient}`);
+        const body = await response.json();
+        const dateEmail = moment.utc(body['date']).format('MMMM Do YYYY, h:mm:ss a');
+
+        $('#email-from').html(body['email_from']);
+        $('#email-to').html(body['email_to']);
+        $('#date').html(dateEmail);
+        $('#product-id').html(body['product_id']);
+        $('#product-name').html(body['product_name']);
+        $('#asset-id').html(body['asset_id']);
+        $('#request-id').html(body['request_id']);
+        $('#email-content').html(body['body']);
+
+        const modalBody = mailDetailModal.getElementsByClassName('modal-dialog')[0];
+        const container = document.getElementById('container');
+
+        if (modalBody.offsetHeight >= container.offsetHeight) {
+            const height = modalBody.offsetHeight + 100;
+            app.emit('$size', { height });
+        }
+    });
+
+    mailDetailModal.addEventListener('hide.mdb.modal', async (e) => {
+        const container = document.getElementById('container');
+        const height = container.offsetHeight;
+        app.emit('$size', { height });
+        t.destroy();
+        main();
+    });
+    app.emit('$size', { height: 800 });
+}
