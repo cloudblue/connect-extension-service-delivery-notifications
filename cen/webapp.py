@@ -29,14 +29,8 @@ def get_db(db_state=Depends(reset_db_state), config=Depends(get_config)):
 @web_app(router)
 @account_settings_page('Settings', '/static/settings.html')
 @module_pages(
-    'Customer Email Notifications',
+    'Log',
     '/static/index.html',
-    children=[
-        {
-            'label': 'Delivery Log',
-            'url': '/static/delivery.html',
-        },
-    ],
 )
 class EmailNotificationsWebApplication(WebApplicationBase):
 

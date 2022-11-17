@@ -1,4 +1,4 @@
-import settingsPage from '../cen/static/js/settings.js';
+import {getSettings, getRules } from '../cen/static/js/settings.js';
 
 global.fetch.mockReturnValue(Promise.resolve({
     json: () => Promise.resolve({email_sender: 'test@example.email', name: 'Test'}),
@@ -8,7 +8,7 @@ let settings;
 
 describe('getSettings', () => {
     beforeEach(async () => {
-        settings = await settingsPage.getSettings();
+        settings = await getSettings();
     });
     it('should return settings', () => {
         expect(settings).toBeDefined();
@@ -21,22 +21,11 @@ describe('getSettings', () => {
     });
 });
 
-describe('main', () => {
-    beforeEach(async () => {
-        jest
-        .spyOn(settingsPage, 'getSettings')
-        .mockImplementation(() => Promise.resolve({email_sender: '', name: ''}));
-        jest
-        .spyOn(global, '$').mockImplementation(() => ({ html: jest.fn() }));
-        await settingsPage.main();
-    });
-    it('should call getSettings',  () => {
-        expect(settingsPage.getSettings).toHaveBeenCalled();
-    });
-    it('should call $ with email_sender', () => {
-        expect($).toHaveBeenCalledWith('#email_sender');
-    });
-    it('should call $ with name', () => {
-        expect($).toHaveBeenCalledWith('#name');
+describe('getRules', () => {
+    it('should return rules', async () => {
+        global.fetch.mockReturnValue(Promise.resolve({
+            json: () => Promise.resolve('OK')}));
+        const rules = await getRules();
+        expect(rules).toBe('OK');
     });
 });

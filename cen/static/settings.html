@@ -1,25 +1,143 @@
 <html>
 
 <head>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <!-- Google Fonts and Icons -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
     <!-- MDB -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/5.0.0/mdb.min.css" rel="stylesheet" />
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown.js/0.5.0/markdown.min.js"></script>
+    <script type="module" src="js/settings.js"></script>
+    <!-- Stylesheet -->
     <link rel="stylesheet" href="css/style.css">
-    
-    <title>Extension Settings</title>
+    <title>Conditional Email Extension Settings Page</title>
 </head>
 
-<body>
-    <div class="settings-wrapper" id="settings">
-        <label>Email sender account</label>
-        <p>The Extension Customer Email Notifications is enabled on your account.</p>
-        <p>This extension has the capability to send to customers email notifications when a new subscription has been activated for them.</p>
-        <p>You can configure for which products as well as the content of the emails on the extension options available on main navigation menu.</p>
-        <p>Please note that all the email notifications will be sent as <b><span id="name"></span></b> and with the email address <b><span id="email_sender"></span></b>.</p>
-        <p>In the use case you would like to change that please configure a different one using the branding options of CloudBlue Connect</p>
+<body style="min-height: 600px;">
+    <div class="container" id="settings">
+        <div id="addRule" class="addRule d-flex justify-content-end pb-1">
+            <button id="buttonAdd" type="button" class="btn" data-mdb-toggle="modal" data-mdb-target="#addModifyModal"
+                data-mdb-whatever=""><span class="material-icons">add</span>Create Rule</button>
+            <button id="buttonSeeConf" type="button" data-mdb-toggle="modal"
+                data-mdb-target="#seeConfModal" data-mdb-whatever=""><span class="material-icons">more_vert</span></button>
+        </div>
+        <div hidden>
+            <button type="button" data-mdb-toggle="modal" data-mdb-target="#deleteModal"></button>
+        </div>
+        <div id="ruleTable">
+            <table id="ruleListTable" class="main-table">
+                <thead>
+                    <tr>
+                        <th>Rule</th>
+                        <th>Product</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="ruleBody">
+                </tbody>
+            </table>
+        </div>
+
+        <div class="modal fade" id="seeConfModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Sender Details</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="settings-wrapper" id="settings">
+                            <label>Email sender account</label>
+                            <p>The Extension Customer Email Notifications is enabled on your account.</p>
+                            <p>This extension has the capability to send to customers email notifications when a new
+                                subscription has been activated for them.</p>
+                            <p>You can configure for which products as well as the content of the emails on the
+                                extension options available on main navigation menu.</p>
+                            <p>Please note that all the email notifications will be sent as <b><span
+                                        id="name"></span></b> and with the email address <b><span
+                                        id="email_sender"></span></b>.</p>
+                            <p>In the use case you would like to change that please configure a different one using the
+                                branding options of CloudBlue Connect</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Delete Rule</h5>
+                        <input type="hidden" id="rule-id-delete" value="">
+                    </div>
+                    <div class="modal-body"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-danger" data-mdb-dismiss="modal"
+                            id="deleteRule">DELETE</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="addModifyModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel"><label id="header-content"></label></h5>
+                        <input type="hidden" id="rule-id-update" value="">
+                        <input type="hidden" id="product-id-update" value="">
+                    </div>
+                    <div class="modal-body p-0">
+                        <form class="m-0">
+                            <div class="container-fluid md-wrapper">
+                                <div class="row">
+                                    <div class="col-lg-6 col-fields">
+                                        <div id="productDropdown">
+                                            <label class="col-form-label" for="flexCheckDefault">Select product</label>
+                                            <select class="form-select" id="product-id-select"
+                                                aria-label="Select the product">
+                                                <option value="PRD-022-646-431">PRD-022-646-431 - Product P03 for
+                                                    martin.constante</option>
+                                                <option value="PRD-681-870-239">PRD-681-870-239 - Product P04 for
+                                                    martin.constante</option>
+                                            </select>
+                                        </div>
+                                        <div id="productIdLabel" style="display: none"></div>
+                                        <div class="form-check">
+                                            <label class="form-check-label" for="flexCheckDefault">Enable</label>
+                                            <input class="form-check-input" type="checkbox" value="" id="enabled">
+                                        </div>
+                                        <label for="message-text" class="col-form-label">Email content</label>
+                                        <textarea class="form-control" id="message-text" rows="28"></textarea>
+                                    </div>
+                                    <div class="col-lg-6 col-preview">
+                                        <label class="col-form-label" for="">Preview</label>
+                                        <div id="previewMD"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" data-mdb-dismiss="modal" id="updateRule"><label
+                                id="add-modify-label-button"></label></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
-    <script type="module" src="js/settings.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/5.0.0/mdb.min.js"></script>
 </body>
 
 </html>
