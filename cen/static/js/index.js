@@ -74,7 +74,6 @@ async function main() {
 
     $('#search-input').keyup(function () {
         if ($(this).val().length==0 || $(this).val().length>3) {
-            ('Redrawing table, searching for', $(this).val());
             t.ajax.reload();
         }
 
