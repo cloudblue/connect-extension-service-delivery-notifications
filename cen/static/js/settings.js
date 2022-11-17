@@ -1,7 +1,6 @@
 import createApp from '/static/js/toolkit.js';
 
 $(window).on('load', async () => {
-    console.log('load event fired');
     setupEvents();
     await refresh();
 });
@@ -32,7 +31,6 @@ async function getRulesProducts() {
 
 async function deleteRule() {
     const id = $('#rule-id-delete').val();
-    console.log(`delelte rule ${id}`);
     await fetch(`/api/rules/${id}`, { method: 'DELETE', });
     refresh();
 }
@@ -45,12 +43,9 @@ async function createUpdateRule() {
     const responseProd = await fetch(`/api/products/${productId}`);
     const product = await responseProd.json(); 
     let icon;
-    console.log(product);
     if (product['logo']!= null){
-        console.log("Tiene logo");
         icon = product['icon'];
     } else {
-        console.log("NO Tiene logo");
         icon = './images/product.svg';
     }
     const payload = JSON.stringify({
@@ -86,7 +81,6 @@ async function createUpdateRule() {
 }
 
 async function refreshRules() {
-    console.log('refresh rules invoked');
     $('#ruleBody').empty();
     const rules = await getRules();
     if (rules.length == 0) {
@@ -130,7 +124,6 @@ async function refreshRules() {
                 </button>
             </td>  
         `);
-        console.log(row);
         $('#ruleBody').append(row);
     });
 }
@@ -138,7 +131,6 @@ async function refreshRules() {
 async function populateProductsDropdown() {
     $('#product-id-select').empty();
     const products = await getRulesProducts();
-    console.log(products);
     products.forEach(product => {
         if (!product.used) {
             $('#product-id-select').append(
@@ -158,7 +150,6 @@ async function showDeleteDialog(e) {
     const button = $(e.relatedTarget);
     const ruleId = button.attr('data-mdb-whatever');
     const rule = await getRule(ruleId);
-    console.log(`in show delete dialog ${ruleId}`);
     $('#deleteModal .modal-body').html(`Are you sure delete the rule associated <br> to the product: ${rule['product_name']}?`);
     $('#rule-id-delete').val(ruleId);
 }

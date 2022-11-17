@@ -74,7 +74,7 @@ async function main() {
 
     $('#search-input').keyup(function () {
         if ($(this).val().length==0 || $(this).val().length>3) {
-            console.log('Redrawing table, searching for', $(this).val());
+            ('Redrawing table, searching for', $(this).val());
             t.ajax.reload();
         }
 
@@ -99,12 +99,10 @@ async function main() {
 
     const mailDetailModal = document.getElementById('mailDetailModal');
     mailDetailModal.addEventListener('show.mdb.modal', async (e) => {
-        console.log('pepito');
         const button = e.relatedTarget;
         const recipient = button.getAttribute('data-mdb-whatever');
         const response = await fetch(`/api/email_task/${recipient}`);
         const body = await response.json();
-        console.log(body);
         const dateEmail = moment.utc(body['date']).format('MMMM Do YYYY, h:mm:ss a');
 
         $('#email-from').html(body['email_from']);
