@@ -132,7 +132,7 @@ def test_send_email_notification_error_no_template(
         installation_client=connect_client,
     )
     result = app.send_email_notification(request_data)
-    assert result.status == ResultType.FAIL
+    assert result.status == ResultType.SUCCESS
 
 
 def test_send_email_notification_error_template(
@@ -171,6 +171,6 @@ def test_send_email_notification_error_template(
         installation_client=connect_client,
     )
     result = app.send_email_notification(request_data)
-    assert result.status == ResultType.FAIL
+    assert result.status == ResultType.SUCCESS
 
     mocked_ses_client.send_email.assert_not_called()
