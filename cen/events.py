@@ -71,11 +71,13 @@ class EmailNotificationsEventsApplication(EventsApplicationBase):
         try:
             template_source = get_rule_product(installation_id, product_id).message
         except peewee.DoesNotExist:
+            self.logger.info(f'No template found for product {product_id} and {installation_id}')
             return BackgroundResponse.done()
 
         try:
             body = markdown.markdown(jinja.render(template_source, request))
-        except Exception:
+        except Exception as e:
+            self.logger.info(f'Error in template: {e}')
             return BackgroundResponse.done()
 
         self.logger.info(f'Send the email for {request["id"]}')
