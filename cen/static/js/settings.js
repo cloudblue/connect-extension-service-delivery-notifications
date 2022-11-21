@@ -17,13 +17,13 @@ export async function getSettings() {
     return body;
 }
 
-async function getRule(id) {
+export async function getRule(id) {
     const response = await fetch(`/api/rules/${id}`);
     const body = await response.json();
     return body;
 }
 
-async function getRulesProducts() {
+export async function getRulesProducts() {
     const response = await fetch('/api/products');
     const body = await response.json();
     return body;
