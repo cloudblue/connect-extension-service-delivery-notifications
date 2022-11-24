@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Any, List
 
 from connect.client import ConnectClient, R
@@ -11,7 +12,7 @@ from connect.eaas.core.inject.common import get_call_context, get_config
 from connect.eaas.core.inject.models import Context
 
 from cen.models import EmailLog, EmailLogPage, Error, Product, Rule, Settings
-from cen import database, jinja
+from cen import database, jinja, mail
 
 
 async def reset_db_state():
@@ -195,3 +196,53 @@ class EmailNotificationsWebApplication(WebApplicationBase):
         email = body['customization']['email']
 
         return {'name': name, 'email_sender': email}
+
+    @router.post(
+        '/tasks/{task_id}/resend',
+        response_model=EmailLog,
+    )
+    def resend_email(
+        self,
+        task_id,
+        response: Response,
+        context: Context = Depends(get_call_context),
+        config: dict = Depends(get_config),
+        installation: dict = Depends(get_installation),
+        installation_client: ConnectClient = Depends(get_installation_client),
+        db: Any = Depends(get_db),
+    ):
+        try:
+            task = database.get_email_task(context.installation_id, task_id)
+            account_id = installation['owner']['id']
+            result_brand = installation_client.accounts[account_id].get()
+            brand = result_brand['brand']
+            body = installation_client.branding('brand').get(params={'id': brand})
+            email_from_name = body['customization']['emailName']
+            email_from = config.get('TEST_EMAIL_FROM', body['customization']['email'])
+
+            email_response = mail.send_email(
+                config,
+                email_from,
+                email_from_name,
+                task.email_to,
+                task.body,
+                task.product_id,
+            )
+            item = {
+                'installation_id': task.installation_id,
+                'date': datetime.utcnow(),
+                'email_from': email_from,
+                'email_to': task.email_to,
+                'product_id': task.product_id,
+                'product_name': task.product_name,
+                'product_logo': task.product_logo,
+                'request_id': task.request_id,
+                'asset_id': task.asset_id,
+                'body': task.body,
+                'email_response': email_response,
+            }
+            new_task = database.create_email_task(item)
+            return new_task
+
+        except DoesNotExist:
+            response.status_code = status.HTTP_404_NOT_FOUND

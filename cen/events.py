@@ -7,7 +7,7 @@ from connect.eaas.core.decorators import event, variables
 from connect.eaas.core.extension import EventsApplicationBase
 from connect.eaas.core.responses import BackgroundResponse
 
-from cen import database, jinja
+from cen import database, jinja, mail
 from cen.database import create_email_task, get_rule_product
 
 CHARSET = 'UTF-8'
@@ -43,22 +43,14 @@ class EmailNotificationsEventsApplication(EventsApplicationBase):
 
     @event('asset_purchase_request_processing', statuses=['approved'])
     def send_email_notification(self, request):
-        ses_client = boto3.client(
-            'ses',
-            aws_access_key_id=self.config['AWS_ACCESS_KEY_ID'],
-            aws_secret_access_key=self.config['AWS_SECRET_ACCESS_FOR_SES'],
-            region_name=self.config['AWS_REGION'],
-        )
 
         account_id = self.installation['owner']['id']
         result_brand = self.installation_client.accounts[account_id].get()
         brand = result_brand['brand']
         body = self.installation_client.branding('brand').get(params={'id': brand})
-
-        name_from = body['customization']['emailName']
+        email_from_name = body['customization']['emailName']
         email_from = self.config.get('TEST_EMAIL_FROM', body['customization']['email'])
 
-        email_source = f'{name_from} <{email_from}>'
         email_to = request['asset']['tiers']['customer']['contact_info']['contact']['email']
         request_id = request['id']
         asset_id = request['asset']['id']
@@ -80,9 +72,9 @@ class EmailNotificationsEventsApplication(EventsApplicationBase):
             self.logger.info(f'Error in template: {e}')
             return BackgroundResponse.done()
 
+        '''
         self.logger.info(f'Send the email for {request["id"]}')
         subject = f'New subscription for product {product_id}'
-
         response_email = ses_client.send_email(
             Destination={
                 'ToAddresses': [
@@ -105,6 +97,8 @@ class EmailNotificationsEventsApplication(EventsApplicationBase):
         )
         installation_id = self.installation['id']
         response_email = response_email['ResponseMetadata']['RequestId']
+        '''
+        response_email = mail.send_email(self.config, email_from, email_from_name, email_to, body, product_id)
         item = {
             'installation_id': installation_id,
             'date': datetime.utcnow(),
@@ -118,5 +112,6 @@ class EmailNotificationsEventsApplication(EventsApplicationBase):
             'body': body,
             'email_response': response_email,
         }
+        
         create_email_task(item)
         return BackgroundResponse.done()
