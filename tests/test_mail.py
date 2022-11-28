@@ -1,69 +1,49 @@
-from connect.eaas.core.enums import ResultType
+import os
 
-from cen import database, mail
-from cen.events import EmailNotificationsEventsApplication
+from cen import mail
 
 
 def test_send_email(
     mocker,
-    client_mocker_factory,
-    auto_rollback,
-    connect_client,
-    logger,
-    installation_data,
-    request_data,
-    rule_data,
 ):
-    client_mocker = client_mocker_factory()
-    client_mocker.accounts['PA-000'].get(return_value={'brand': 'BR-000'})
-    client_mocker.branding('brand').get(return_value={
-        'customization': {
-            'email': 'test@example.com',
-            'emailName': 'testname',
-        }},
-    )
+    config = {
+        'DB_CONNECTION_STRING': os.getenv('TEST_DATABASE_URL'),
+        'AWS_ACCESS_KEY_ID': 'access_id',
+        'AWS_SECRET_ACCESS_FOR_SES': 'access_secret',
+        'AWS_REGION': 'region',
+    }
+    test_email = 'test@receiver.com'
+    test_name = 'test_name'
+    test_sender = 'test@sender.com'
+    body = '<p>rendered body</p>'
+    subject = 'New subscription for product PRD-000'
+    product_id = 'PRD-000'
 
-    database.create_rule(rule_data)
     mocked_ses_client = mocker.MagicMock()
-    mocked_boto3 = mocker.patch('cen.events.boto3.client', return_value=mocked_ses_client)
-    mocked_jinja = mocker.patch('cen.events.jinja.render', return_value='rendered body')
-
-    app = EmailNotificationsEventsApplication(
-        connect_client,
-        logger,
-        {
-            'DB_CONNECTION_STRING': 'connection_string',
-            'AWS_ACCESS_KEY_ID': 'access_id',
-            'AWS_SECRET_ACCESS_FOR_SES': 'access_secret',
-            'AWS_REGION': 'region',
-        },
-        installation=installation_data,
-        installation_client=connect_client,
-    )
-    result = mail.send_email(request_data)
-    assert result.status == ResultType.SUCCESS
-
+    mocked_boto3 = mocker.patch('cen.mail.boto3.client', return_value=mocked_ses_client)
+    CHARSET = 'UTF-8'
+    mail.send_email(config, test_sender, test_name, test_email, body, product_id)
     mocked_ses_client.send_email.assert_called_once_with(
         Destination={
             'ToAddresses': [
-                request_data['asset']['tiers']['customer']['contact_info']['contact']['email'],
+                test_email,
             ],
         },
         Message={
             'Body': {
                 'Html': {
-                    'Charset': 'UTF-8',
-                    'Data': '<p>rendered body</p>',
+                    'Charset': CHARSET,
+                    'Data': body,
                 },
             },
             'Subject': {
-                'Charset': 'UTF-8',
-                'Data': f"New subscription for product {request_data['asset']['product']['id']}",
+                'Charset': CHARSET,
+                'Data': subject,
             },
         },
-        Source='testname <test@example.com>',
-    )
+        Source='test_name <test@sender.com>',
 
+    )
 
     mocked_boto3.assert_called_once_with(
         'ses',
@@ -71,9 +51,3 @@ def test_send_email(
         aws_secret_access_key='access_secret',
         region_name='region',
     )
-
-    mocked_jinja.assert_called_once_with(
-        rule_data['message'],
-        request_data,
-    )
-

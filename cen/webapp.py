@@ -205,14 +205,13 @@ class EmailNotificationsWebApplication(WebApplicationBase):
         self,
         task_id,
         response: Response,
-        context: Context = Depends(get_call_context),
         config: dict = Depends(get_config),
         installation: dict = Depends(get_installation),
         installation_client: ConnectClient = Depends(get_installation_client),
         db: Any = Depends(get_db),
     ):
         try:
-            task = database.get_email_task(context.installation_id, task_id)
+            task = database.get_email_task(installation['id'], task_id)
             account_id = installation['owner']['id']
             result_brand = installation_client.accounts[account_id].get()
             brand = result_brand['brand']

@@ -2,6 +2,7 @@ import createApp from '/static/js/toolkit.js';
 const app = createApp({});
 
 app.listen('$init', main);
+$('#resend').click(resend);
 
 export async function getEmailLogsList(limit, offset, search) {
     const response = await fetch(`/api/email_tasks?search=${search}&limit=${limit}&offset=${offset}`);
@@ -10,7 +11,7 @@ export async function getEmailLogsList(limit, offset, search) {
 }
 
 async function main() {
-
+    console.log('pepito');
     let offset = 0;
     let search = '';
     document.getElementById("EmailLogsTable").style.display = 'inline';
@@ -104,6 +105,7 @@ async function main() {
         const body = await response.json();
         const dateEmail = moment.utc(body['date']).format('MMMM Do YYYY, h:mm:ss a');
 
+        $('#task-id').html(recipient);
         $('#email-from').html(body['email_from']);
         $('#email-to').html(body['email_to']);
         $('#date').html(dateEmail);
@@ -130,4 +132,11 @@ async function main() {
         main();
     });
     app.emit('$size', { height: 800 });
+}
+
+async function resend(){
+    const id = $('#task-id').html();
+    console.log('Resend task: '+(id));
+    await fetch(`/api/tasks/${id}/resend`, { method: 'POST', });
+    console.log('sent');
 }

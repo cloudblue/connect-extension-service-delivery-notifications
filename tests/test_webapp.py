@@ -379,3 +379,77 @@ def test_get_product_not_found(test_client_factory, client_mocker_factory, auto_
         config={'DB_CONNECTION_STRING': os.getenv('TEST_DATABASE_URL')},
     )
     assert response.status_code == 404
+
+
+def test_resend_email(mocker, client_mocker_factory, test_client_factory, auto_rollback):
+    client = test_client_factory(EmailNotificationsWebApplication)
+    task = {
+        'installation_id': 'EIN-000',
+        'date': datetime.utcnow(),
+        'email_from': 'email_from',
+        'email_to': 'email_to',
+        'product_id': 'product_id',
+        'product_name': 'product_name',
+        'product_logo': 'product_logo',
+        'request_id': 'request_id',
+        'asset_id': 'asset_id',
+        'body': 'body',
+        'email_response': 'email_response',
+    }
+    obj = database.create_email_task(task)
+    client_mocker = client_mocker_factory()
+    client_mocker.accounts['PA-000'].get(return_value={'brand': 'BR-000'})
+    client_mocker.branding('brand').get(return_value={
+        'customization': {
+            'email': 'test2@example.com',
+            'emailName': 'testname2',
+        }},
+    )
+    installation = {
+        'id': 'EIN-000',
+        'owner': {'id': 'PA-000'},
+    }
+    config = {'DB_CONNECTION_STRING': os.getenv('TEST_DATABASE_URL')}
+    mocked_send_email = mocker.patch(
+        'cen.webapp.mail.send_email',
+        return_value='email_response',
+    )
+
+    response = client.post(
+        f'/api/tasks/{obj.id}/resend',
+        installation=installation,
+        config=config,
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body['id'] != obj.id
+    mocked_send_email.assert_called_once_with(
+        config,
+        'test2@example.com',
+        'testname2',
+        obj.email_to,
+        obj.body,
+        obj.product_id,
+    )
+    assert body['email_from'] != obj.email_from
+    assert body['email_response'] == 'email_response'
+
+
+def test_resend_email_not_found(mocker, test_client_factory):
+    client = test_client_factory(EmailNotificationsWebApplication)
+    installation = {
+        'id': 'EIN-000',
+        'owner': {'id': 'PA-000'},
+    }
+    config = {'DB_CONNECTION_STRING': os.getenv('TEST_DATABASE_URL')}
+    mocked_send_email = mocker.patch('cen.webapp.mail.send_email')
+
+    response = client.post(
+        '/api/tasks/TSK-000/resend',
+        installation=installation,
+        config=config,
+    )
+
+    mocked_send_email.assert_not_called
+    assert response.status_code == 404

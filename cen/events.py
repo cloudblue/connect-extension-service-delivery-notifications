@@ -1,6 +1,5 @@
 from datetime import datetime
 
-import boto3
 import markdown
 import peewee
 from connect.eaas.core.decorators import event, variables
@@ -72,33 +71,14 @@ class EmailNotificationsEventsApplication(EventsApplicationBase):
             self.logger.info(f'Error in template: {e}')
             return BackgroundResponse.done()
 
-        '''
-        self.logger.info(f'Send the email for {request["id"]}')
-        subject = f'New subscription for product {product_id}'
-        response_email = ses_client.send_email(
-            Destination={
-                'ToAddresses': [
-                    email_to,
-                ],
-            },
-            Message={
-                'Body': {
-                    'Html': {
-                        'Charset': CHARSET,
-                        'Data': body,
-                    },
-                },
-                'Subject': {
-                    'Charset': CHARSET,
-                    'Data': subject,
-                },
-            },
-            Source=email_source,
+        response_email = mail.send_email(
+            self.config,
+            email_from,
+            email_from_name,
+            email_to,
+            body,
+            product_id,
         )
-        installation_id = self.installation['id']
-        response_email = response_email['ResponseMetadata']['RequestId']
-        '''
-        response_email = mail.send_email(self.config, email_from, email_from_name, email_to, body, product_id)
         item = {
             'installation_id': installation_id,
             'date': datetime.utcnow(),
@@ -112,6 +92,6 @@ class EmailNotificationsEventsApplication(EventsApplicationBase):
             'body': body,
             'email_response': response_email,
         }
-        
+
         create_email_task(item)
         return BackgroundResponse.done()
