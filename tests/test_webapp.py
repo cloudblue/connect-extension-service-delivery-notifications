@@ -96,6 +96,7 @@ def test_list_rules(mocker, auto_rollback, test_client_factory):
     response = client.get(
         '/api/rules',
         config={'DB_CONNECTION_STRING': os.getenv('TEST_DATABASE_URL')},
+        context={'installation_id': 'EIN-000'},
     )
     assert response.status_code == 200
     data = response.json()
