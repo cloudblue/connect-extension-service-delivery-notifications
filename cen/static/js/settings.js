@@ -39,9 +39,9 @@ async function createUpdateRule() {
     const ruleId = $('#rule-id-update').val();
     const enabled = $('#enabled').is(':checked');
     const productId = ruleId ? $('#product-id-update').val() : $("#product-id-select option:selected").val();
-    
+
     const responseProd = await fetch(`/api/products/${productId}`);
-    const product = await responseProd.json(); 
+    const product = await responseProd.json();
     let icon;
     if (product['logo']!= null){
         icon = product['icon'];
@@ -58,7 +58,7 @@ async function createUpdateRule() {
 
     let url = null;
     let method = null;
-    
+
     if (ruleId) {
         url = `/api/rules/${ruleId}`;
         method = 'PUT'
@@ -75,12 +75,12 @@ async function createUpdateRule() {
                 body: payload
             }
         );
-        $('#rule-id-update').val('');    
+        $('#rule-id-update').val('');
         refresh();
-    } catch (e){alert(e)} 
+    } catch (e){alert(e)}
 }
 
-async function refreshRules() {
+export async function refreshRules() {
     $('#ruleBody').empty();
     const rules = await getRules();
     if (rules.length == 0) {
@@ -92,18 +92,21 @@ async function refreshRules() {
     rules.forEach(rule => {
         const row = $('<tr>');
         row.append(`<td>${rule.id}</td>`);
-        row.append(`<td class="td-product">
-        <img src="./images/product.svg" alt="Logo">
-        <div>
-        <div class="name">${rule.product_name}</div>
-        <div class="id">${rule.product_id}</div>
-        </div></td>`);
+        row.append(`
+        <td class="td-product">
+            <img src="./images/product.svg" alt="Logo">
+            <div>
+                <div class="name">${rule.product_name}</div>
+                <div class="id">${rule.product_id}</div>
+            </div>
+        </td>
+        `);
         if (rule.enabled) {
             row.append('<td><span class="enabled"></span>Enabled</td>');
         } else {
             row.append('<td><span class="disabled"></span>Disabled</td>');
         }
-        
+
         row.append(`
             <td>
                 <button
@@ -128,7 +131,7 @@ async function refreshRules() {
     });
 }
 
-async function populateProductsDropdown() {
+export async function populateProductsDropdown() {
     $('#product-id-select').empty();
     const products = await getRulesProducts();
     products.forEach(product => {
@@ -140,13 +143,13 @@ async function populateProductsDropdown() {
     });
 }
 
-async function showSeeConfDialog(e) {
+export async function showSeeConfDialog(e) {
     const settings = await getSettings();
     $('#email_sender').html(settings.email_sender);
     $('#name').html(settings.name);
 }
 
-async function showDeleteDialog(e) {
+export async function showDeleteDialog(e) {
     const button = $(e.relatedTarget);
     const ruleId = button.attr('data-mdb-whatever');
     const rule = await getRule(ruleId);
@@ -169,8 +172,8 @@ async function showAddModifyDialog(e) {
     } else {
         const rule = await getRule(ruleId);
         $('#productDropdown').hide();
-        const textTittle = `Modify Rule for: ${rule['product_name']}`; 
-        $('#header-content').text(textTittle);
+        const textTitle = `Modify Rule for: ${rule['product_name']}`;
+        $('#header-content').text(textTitle);
         $('#add-modify-label-button').text('SAVE');
         $('#enabled').prop('checked', rule['enabled'] == true);
         $('#rule-id-update').val(ruleId);
@@ -181,7 +184,7 @@ async function showAddModifyDialog(e) {
     $('#add-modify-modal-content').show();
 }
 
-async function refresh() {
+export async function refresh() {
     const products = await getRulesProducts();
     let productsAvailable = false;
     products.forEach(product => {
@@ -208,7 +211,6 @@ function updateMD() {
     preview = markdown.toHTML(preview);
     $('#previewMD').html(preview);
 }
-
 
 const app = createApp({});
 app.listen('$init', async () => {
