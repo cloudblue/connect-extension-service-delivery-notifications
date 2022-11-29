@@ -133,7 +133,7 @@ async function main() {
     app.emit('$size', { height: 800 });
 }
 
-async function resend(){
+async function resend() {
     const id = $('#task-id').html();
     await fetch(`/api/tasks/${id}/resend`, { method: 'POST', });
 }
