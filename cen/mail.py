@@ -1,12 +1,5 @@
-from datetime import datetime
 
 import boto3
-import markdown
-import peewee
-from fastapi import Depends
-from cen import database, jinja
-from cen.database import create_email_task, get_rule_product
-from connect.eaas.core.inject.common import get_call_context, get_config
 
 CHARSET = 'UTF-8'
 
