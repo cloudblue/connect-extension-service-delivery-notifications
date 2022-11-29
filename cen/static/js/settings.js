@@ -158,17 +158,17 @@ export async function showDeleteDialog(e) {
 }
 
 async function showAddModifyDialog(e) {
-    $('#add-modify-modal-content').hide();
+    $('#addModifyModalDiv').hide();
     const button = $(e.relatedTarget);
     const ruleId = button.attr('data-mdb-whatever');
     if (!ruleId) {
         await populateProductsDropdown();
+        $('#productIdLabel').hide();
         $('#productDropdown').show();
         $('#header-content').text('Create Rule');
         $('#add-modify-label-button').text('ADD');
         $('#message-text').load('example.md', updateMD);
         $('#productIdLabel').text('');
-        $('#productIdLabel').hide();
     } else {
         const rule = await getRule(ruleId);
         $('#productDropdown').hide();
@@ -179,9 +179,9 @@ async function showAddModifyDialog(e) {
         $('#rule-id-update').val(ruleId);
         $('#product-id-update').val(rule['product_id']);
         $('#message-text').val(rule['message']);
-        updateMD();
+        await updateMD();
     }
-    $('#add-modify-modal-content').show();
+    $('#addModifyModalDiv').show();
 }
 
 export async function refresh() {
@@ -206,7 +206,7 @@ function setupEvents() {
     $('#message-text').on('input', updateMD);
 }
 
-function updateMD() {
+async function updateMD() {
     let preview = $('#message-text').val();
     preview = markdown.toHTML(preview);
     $('#previewMD').html(preview);

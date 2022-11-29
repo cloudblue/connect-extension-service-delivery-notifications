@@ -3,7 +3,7 @@ version: '3'
 services:
   cen_dev:
     container_name: cen_dev
-    image: cloudblueconnect/connect-extension-runner:26.36
+    image: cloudblueconnect/connect-extension-runner:26.37
     command: cextrun -d
     volumes: 
       - .:/extension

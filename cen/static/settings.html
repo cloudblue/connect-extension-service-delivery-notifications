@@ -20,7 +20,7 @@
     <div class="container" id="settings">
         <div id="addRule" class="addRule d-flex justify-content-end pb-1">
             <button id="buttonAdd" type="button" class="btn" data-mdb-toggle="modal" data-mdb-target="#addModifyModal"
-                data-mdb-whatever=""><span class="material-icons">add</span>Create Rule</button>
+                data-mdb-whatever=""><span class="material-icons" >add</span>Create Rule</button>
             <button id="buttonSeeConf" type="button" data-mdb-toggle="modal"
                 data-mdb-target="#seeConfModal" data-mdb-whatever=""><span class="material-icons">more_vert</span></button>
         </div>
@@ -89,7 +89,7 @@
 
         <div class="modal fade" id="addModifyModal" tabindex="-1" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
-            <div class="modal-dialog modal-xl">
+            <div class="modal-dialog modal-xl" id="addModifyModalDiv">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel"><label id="header-content"></label></h5>
@@ -112,8 +112,10 @@
                                             <label class="form-check-label" for="flexCheckDefault">Enable</label>
                                             <input class="form-check-input" type="checkbox" value="" id="enabled">
                                         </div>
+                                        <div class="form-check">
                                         <label for="message-text" class="col-form-label">Email content</label>
-                                        <textarea class="form-control" id="message-text" rows="18"></textarea>
+                                        </div>
+                                        <textarea id="message-text" rows="18"></textarea>
                                     </div>
                                     <div class="col-lg-6 col-preview">
                                         <label class="col-form-label" for="">Preview</label>
@@ -126,7 +128,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-primary" data-mdb-dismiss="modal" id="updateRule"><label
-                                id="add-modify-label-button"></label></button>
+                                id="add-modify-label-button" ></label></button>
                     </div>
                 </div>
             </div>

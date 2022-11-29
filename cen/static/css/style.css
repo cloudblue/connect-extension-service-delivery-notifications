@@ -375,6 +375,11 @@ button.material-icons:active:focus{
     padding-right: 12px;
 }
 
+#message-text {
+    width: 550px;
+    border: none;
+}
+
 /* Forms */
 
 .form-check {
