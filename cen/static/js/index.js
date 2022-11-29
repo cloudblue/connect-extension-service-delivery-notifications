@@ -11,7 +11,6 @@ export async function getEmailLogsList(limit, offset, search) {
 }
 
 async function main() {
-    console.log('pepito');
     let offset = 0;
     let search = '';
     document.getElementById("EmailLogsTable").style.display = 'inline';
@@ -136,7 +135,5 @@ async function main() {
 
 async function resend(){
     const id = $('#task-id').html();
-    console.log('Resend task: '+(id));
     await fetch(`/api/tasks/${id}/resend`, { method: 'POST', });
-    console.log('sent');
 }
