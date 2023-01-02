@@ -2,14 +2,14 @@ body {
     color: rgba(0,0,0,0.87);
 }
 /* index.html */
-#settings {
+#data-table {
     display: none;
     width: 100%;
     max-width: 100%;
     padding: 0;
     font-size: 14px;
 }
-#settings h3 {
+#data-table h3 {
     font-size: 18px;
 }
 
@@ -330,6 +330,15 @@ button.material-icons:active:focus{
 }
 
 /* SETTINGS */
+#settings {
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+    font-size: 14px;
+}
+#settings h3 {
+    font-size: 18px;
+}
 
 .settings-wrapper {
     background: #f5f5f5;

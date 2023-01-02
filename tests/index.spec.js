@@ -24,7 +24,7 @@ describe('getEmailLogsList', () => {
         }));
         document.body.innerHTML = `
             <div id="loader-container"></div>
-            <div id="settings"></div>
+            <div id="data-table"></div>
         `;
     });
 
@@ -196,7 +196,7 @@ describe('populateDataTable', () => {
 
         document.body.innerHTML = `
             <div id="loader-container"></div>
-            <div id="settings"></div>
+            <div id="data-table"></div>
         `;
 
         populateDataTable(data, callback, '');
