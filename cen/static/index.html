@@ -20,6 +20,9 @@
 </head>
 
 <body>
+    <div id="loader-container">
+        <div class="loader"></div>
+    </div>
     <div class="container" id="container"></div>
     <div hidden>
         <button type="button" data-mdb-toggle="modal" data-mdb-target="#mailDetailModal"></button>
@@ -78,38 +81,29 @@
         </div>
     </div>
     </div>
-
     <div class="container" id="settings">
-        <div class="header">
-        </div>
+        <div class="header"></div>
         <div id="search-wrapper">
-            <input type="search" id="search-input">
+            <input type="text" id="search-input">
             <div class="search-btn">
                 <span class="material-icons">search</span>Search
             </div>
         </div>
         <div id="EmailLogsTable">
-            <div id="EmailLogsTable">
-                <table id="task-list-table" class="main-table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Task</th>
-                            <th>Product</th>
-                            <th>Email From</th>
-                            <th>Date</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
+            <table id="task-list-table" class="main-table table-striped">
+                <thead>
+                    <tr>
+                        <th>Task</th>
+                        <th>Product</th>
+                        <th>Email From</th>
+                        <th>Date</th>
+                        <th></th>
+                    </tr>
+                </thead>
+            </table>
         </div>
         <div id="rows-selector">
-            <span id="rows-per-page">Rows per page
-                <select name="select-rows-per-page" id="select-rows-per-page">
-                    <option value="10" selected>10</option>
-                    <option value="20">20</option>
-                    <option value="50">50</option>
-                </select>
+            <span id="rows-per-page">
                 <label id="page-min"></label>—
                 <label id="page-max"></label>&nbsp;of&nbsp;
                 <label id="page-total"></label>

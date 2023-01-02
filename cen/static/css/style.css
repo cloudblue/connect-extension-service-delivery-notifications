@@ -3,6 +3,7 @@ body {
 }
 /* index.html */
 #settings {
+    display: none;
     width: 100%;
     max-width: 100%;
     padding: 0;
@@ -547,4 +548,31 @@ textarea:focus-visible {
         display: table-cell;
     }
 
+}
+
+#loader-container {
+    display: flex;
+    width: 100%;
+    position: fixed;
+    z-index: 1;
+    justify-content: center;
+    margin-top: 32px;
+}
+
+.loader {
+    width: 64px;
+    height: 64px;
+    border: 8px solid;
+    border-color: #4797f2 transparent #4797f2 transparent;
+    border-radius: 50%;
+    animation: spin-anim 1.2s linear infinite;
+}
+
+@keyframes spin-anim {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
