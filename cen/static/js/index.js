@@ -35,7 +35,7 @@ export async function getEmailLogsList(limit, offset, search) {
     const response = await fetch(`/api/email_tasks?search=${search}&limit=${limit}&offset=${offset}`);
     let body = await response.json();
     document.getElementById("loader-container").style.display = 'none';
-    document.getElementById("settings").style.display = 'block';
+    document.getElementById("data-table").style.display = 'block';
     return body;
 };
 
