@@ -2,6 +2,8 @@ import os
 
 from cen import mail
 
+from unittest.mock import ANY
+
 
 def test_send_email(
     mocker,
@@ -16,33 +18,17 @@ def test_send_email(
     test_name = 'test_name'
     test_sender = 'test@sender.com'
     body = '<p>rendered body</p>'
-    subject = 'New subscription for product PRD-000'
     product_id = 'PRD-000'
 
     mocked_ses_client = mocker.MagicMock()
     mocked_boto3 = mocker.patch('cen.mail.boto3.client', return_value=mocked_ses_client)
-    CHARSET = 'UTF-8'
     mail.send_email(config, test_sender, test_name, test_email, body, product_id)
-    mocked_ses_client.send_email.assert_called_once_with(
-        Destination={
-            'ToAddresses': [
-                test_email,
-            ],
+    mocked_ses_client.send_raw_email.assert_called_once_with(
+        Source=f'{test_name} <{test_sender}>',
+        Destinations=[test_email],
+        RawMessage={
+            'Data': ANY,
         },
-        Message={
-            'Body': {
-                'Html': {
-                    'Charset': CHARSET,
-                    'Data': body,
-                },
-            },
-            'Subject': {
-                'Charset': CHARSET,
-                'Data': subject,
-            },
-        },
-        Source='test_name <test@sender.com>',
-
     )
 
     mocked_boto3.assert_called_once_with(
