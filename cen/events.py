@@ -32,6 +32,10 @@ CHARSET = 'UTF-8'
             'initial_value': 'Change for the database chain connection',
             'secure': True,
         },
+        {
+            'name': 'ENVIRONMENT',
+            'initial_value': 'TEST',
+        },
     ],
 )
 class EmailNotificationsEventsApplication(EventsApplicationBase):

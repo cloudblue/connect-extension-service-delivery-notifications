@@ -3,9 +3,11 @@ version: '3'
 services:
   cen_dev:
     container_name: cen_dev
-    image: cloudblueconnect/connect-extension-runner:26.37
+    build:
+      context: .
+    working_dir: /extension
     command: cextrun -d
-    volumes: 
+    volumes:
       - .:/extension
     env_file:
       - .env
@@ -14,6 +16,39 @@ services:
       TEST_DATABASE_URL: postgres://postgres:mypass@db_ram:5432/cen
     depends_on:
       - db
+
+  cen_bash:
+    container_name: cen_bash
+    build:
+      context: .
+    working_dir: /extension
+    command: /bin/bash
+    stdin_open: true
+    tty: true
+    volumes:
+      - .:/extension
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgres://postgres:A12345@db:5432/cen
+      TEST_DATABASE_URL: postgres://postgres:mypass@db_ram:5432/cen
+    depends_on:
+      - db
+
+  cen_test:
+    container_name: cen_test
+    build:
+      context: .
+    working_dir: /extension
+    command: extension-test
+    volumes:
+      - .:/extension
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgres://postgres:A12345@db:5432/cen
+      TEST_DATABASE_URL: postgres://postgres:mypass@db_ram:5432/cen
+    depends_on:
       - db_ram
   db:
     image: postgres:11.5
