@@ -1,4 +1,4 @@
-import createApp from '/static/js/toolkit.js';
+import createApp from './toolkit.js';
 
 
 const createdApp = createApp({});
