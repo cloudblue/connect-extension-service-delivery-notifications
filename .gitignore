@@ -136,3 +136,6 @@ pg_data
 
 # node_modules
 node_modules/
+
+# editor config
+.idea
